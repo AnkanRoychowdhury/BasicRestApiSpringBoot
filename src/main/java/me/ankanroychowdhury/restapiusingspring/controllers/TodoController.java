@@ -1,6 +1,9 @@
 package me.ankanroychowdhury.restapiusingspring.controllers;
 
 import me.ankanroychowdhury.restapiusingspring.entities.Todo;
+import me.ankanroychowdhury.restapiusingspring.exceptions.ApplicationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,20 +22,26 @@ public class TodoController {
         }
     }
     @GetMapping("")
-    public List<Todo> getTodoList(){
-        return todoList;
+    public ResponseEntity<List<Todo>> getTodoList(){
+        return ResponseEntity.ok(todoList);
     }
 
     @GetMapping("/{todoId}")
-    public Todo getTodoByID(@PathVariable Long todoId){
-        try {
-            for(Todo todo: todoList){
-                if(todo.getId() == todoId) return todo;
+    public ResponseEntity<Todo> getTodoByID(@PathVariable Long todoId){
+        Todo responseTodo = null;
+        for(Todo todo: todoList){
+            if(todo.getId() == todoId) {
+                responseTodo = todo;
+                break;
             }
-        } catch(Exception e){
-            e.printStackTrace();
         }
-        return null;
+        if(responseTodo == null){
+            throw new ApplicationException(
+                    String.format("Todo with id=%d not found", todoId),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+        return ResponseEntity.ok(responseTodo);
     }
 
 
