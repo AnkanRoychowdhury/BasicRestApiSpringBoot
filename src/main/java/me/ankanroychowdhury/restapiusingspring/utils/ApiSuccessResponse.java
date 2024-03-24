@@ -1,10 +1,10 @@
-package me.ankanroychowdhury.restapiusingspring.exceptions;
+package me.ankanroychowdhury.restapiusingspring.utils;
+
 import lombok.Data;
 
 @Data
-public class ApiErrorResponse {
+public class ApiSuccessResponse {
     private final String message;
     private final Integer statusCode;
     private final String statusName;
-    private final String path;
 }
